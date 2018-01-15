@@ -5,6 +5,7 @@
 #include<stdexcept>
 #include"file_parser.h"
 #include<bitset>
+#include"common.h"
 
 namespace m2
 {
@@ -454,7 +455,7 @@ public:
 		return md20_tg;
 	}
 	
-	void set_attachment_position(std::size_t pos,const md20::common_types::vector3& v)
+	void set_attachment_position(std::size_t pos,const common_types::vector3& v)
 	{
 		decltype(auto) bones(at(hd->bones));
 		decltype(auto) attachments(at(hd->attachments));
