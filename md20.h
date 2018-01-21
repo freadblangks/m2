@@ -39,6 +39,8 @@ struct md20
 	float collision_sphere_radius;
 	std::vector<std::uint16_t> collision_triangles;
 	std::vector<common_types::vector3> collision_vertices,collision_normals;
+	std::vector<attachment> attachments;
+	std::vector<std::uint16_t> attachment_lookup_table;
 	md20(const std::string &s)
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
@@ -147,6 +149,18 @@ struct md20
 		m(collision_triangles,header.collision_triangles);
 		m(collision_vertices,header.collision_vertices);
 		m(collision_normals,header.collision_normals);
+		{
+		auto b(reinterpret_cast<const dh::attachment*>(s.data()+header.attachments.offset_elements));
+		for(std::size_t i(0);i!=header.attachments.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			attachments.emplace_back();
+			auto &back(attachments.back());
+			back.t=ele.t;
+			pt(back.animate_attached,ele.animate_attached);
+		}
+		}
+		m(attachment_lookup_table,header.attachment_lookup_table);
 	}
 	auto serialize_md20() const
 	{

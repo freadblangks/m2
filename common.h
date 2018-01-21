@@ -204,6 +204,21 @@ ostrm& operator<<(ostrm& os,const texture& c)
 {
 	return os<<c.type<<'\t'<<c.flags;
 }
+
+struct attachment
+{
+	std::uint32_t id;
+	std::uint16_t bone;
+	std::uint16_t unknown;
+	common_types::vector3 position;
+};
+
+template<typename ostrm>
+decltype(auto) operator<<(ostrm& os,const attachment &c)
+{
+	return os<<"id "<<c.id<<"\tbone "<<c.bone<<"\tpivot "<<c.position;
+}
+
 }
 
 }

@@ -43,5 +43,10 @@ struct texture_transform
 	track scaling;
 };
 
+struct attachment
+{
+	common::attachment t;
+	track animate_attached;
+};
 }
 }

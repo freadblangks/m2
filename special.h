@@ -45,4 +45,15 @@ struct texture_transform
 	track<common_types::vector3> scaling;
 };
 
+struct attachment
+{
+	common::attachment t;
+	track<std::uint8_t> animate_attached;
+};
+template<typename ostrm>
+ostrm& operator<<(ostrm& os,const attachment& c)
+{
+	return os<<c.t;
+}
+
 }
