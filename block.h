@@ -12,6 +12,7 @@ class block
 		virtual ~base() = default;
 		virtual base* clone() const = 0;
 		virtual std::string serialize() const = 0;
+		virtual const std::type_info& type() const = 0;
 	}*u;
 	template<typename T>
 	struct derv:base
@@ -26,6 +27,10 @@ class block
 		std::string serialize() const
 		{
 			return t.serialize();
+		}
+		const std::type_info& type() const
+		{
+			return typeid(t);
 		}
 	};
 public:
@@ -62,6 +67,27 @@ public:
 	std::string serialize() const
 	{
 		return u->serialize();
+	}
+
+	const std::type_info& type() const noexcept
+	{
+		return u->type();
+	}
+
+	template<typename T>
+	T& get()
+	{
+		if(type()==typeid(T))
+			return static_cast<derv<T>*>(u)->t;
+		throw std::bad_cast();
+	}
+	
+	template<typename T>
+	const T& get() const
+	{
+		if(type()==typeid(T))
+			return static_cast<const derv<T>*>(u)->t;
+		throw std::bad_cast();
 	}
 };
 
