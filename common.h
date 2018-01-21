@@ -27,6 +27,15 @@ struct bounds
 	float radius;
 };
 
+template<typename T>
+struct spline_key
+{
+	using value_type = T;
+	value_type value;
+	value_type in;
+	value_type out;
+};
+
 struct sequence
 {
 	std::uint16_t id;                   // Animation id in AnimationData.dbc
@@ -232,6 +241,13 @@ struct light
 	std::uint16_t type;
 	std::uint16_t bone;
 	common_types::vector3 position;
+};
+
+struct camera
+{
+	std::uint32_t type;
+	float far_clip;
+	float near_clip;
 };
 
 }

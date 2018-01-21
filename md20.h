@@ -43,6 +43,8 @@ struct md20
 	std::vector<std::uint16_t> attachment_lookup_table;
 	std::vector<event> events;
 	std::vector<light> lights;
+	std::vector<camera> cameras;
+	std::vector<std::uint16_t> camera_lookup_table;
 	md20(const std::string &s)
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
@@ -195,6 +197,23 @@ struct md20
 			pt(back.visibility,ele.visibility);
 		}
 		}
+		{
+		auto b(reinterpret_cast<const dh::camera*>(s.data()+header.cameras.offset_elements));
+		for(std::size_t i(0);i!=header.cameras.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			cameras.emplace_back();
+			auto &back(cameras.back());
+			back.t=ele.t;
+			pt(back.positions,ele.positions);
+			back.position_base=ele.position_base;
+			pt(back.target_position,ele.target_position);
+			back.target_position_base=ele.target_position_base;
+			pt(back.roll,ele.roll);
+			pt(back.fov,ele.fov);
+		}
+		}
+		m(camera_lookup_table,header.camera_lookup_table);
 	}
 	auto serialize_md20() const
 	{

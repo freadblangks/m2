@@ -71,5 +71,16 @@ struct light
 	track visibility;
 };
 
+struct camera
+{
+	common::camera t;
+	track positions;
+	common_types::vector3 position_base;
+	track target_position;
+	common_types::vector3 target_position_base;
+	track roll;
+	track fov;
+};
+
 }
 }

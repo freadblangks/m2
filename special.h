@@ -74,4 +74,15 @@ struct light
 	track<std::uint8_t> visibility;
 };
 
+struct camera
+{
+	common::camera t;
+	track<spline_key<common_types::vector3>> positions;
+	common_types::vector3 position_base;
+	track<spline_key<common_types::vector3>> target_position;
+	common_types::vector3 target_position_base;
+	track<spline_key<float>> roll;
+	track<spline_key<float>> fov;
+};
+
 }
