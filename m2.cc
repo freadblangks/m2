@@ -18,6 +18,8 @@ try
 		fin.exceptions(std::ifstream::failbit);
 	std::string file((std::istreambuf_iterator<char>(fin)),std::istreambuf_iterator<char>());
 	m2::m2 m(file);
+	std::cout<<m<<'\n';
+	decltype(auto) md20(m.get<m2::md20>());
 }
 catch(const std::exception& ex)
 {

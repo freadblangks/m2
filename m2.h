@@ -26,7 +26,6 @@ struct m2
 				break;
 				default:
 					blocks.emplace_back(std::in_place_type<unknown>,mg,s);
-				break;
 			}
 			it+=8+size;
 		}
@@ -38,6 +37,35 @@ struct m2
 			r.append(ele.serialize());
 		return r;
 	}
+	template<typename T>
+	decltype(auto) get()
+	{
+		for(auto &ele : blocks)
+			if(ele.type()==typeid(T))
+				return ele.get<T>();
+		throw std::logic_error("md file does not have this type");
+	}
+
+	template<typename T>
+	decltype(auto) get() const
+	{
+		for(auto &ele : blocks)
+			if(ele.type()==typeid(T))
+				return ele.get<T>();
+		throw std::logic_error("md file does not have this type");
+	}
 };
+
+template<typename ostrm>
+ostrm& operator<<(ostrm& os,const m2& u)
+{
+	for(std::size_t i(0);i!=u.blocks.size();++i)
+	{
+		if(i)
+			os.put('\n');
+		os<<u.blocks[i];
+	}
+	return os;
+}
 
 };

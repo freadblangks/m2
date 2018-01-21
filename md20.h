@@ -91,4 +91,10 @@ struct md20
 	}
 };
 
+template<typename ostrm>
+ostrm& operator<<(ostrm& os,const md20& u)
+{
+	return os<<"MD20\t"<<u.name<<'\t'<<u.ver;
+}
+
 }

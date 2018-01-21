@@ -150,6 +150,14 @@ struct md20_flags
 	std::uint32_t flag_unk_0x200000: 1;// apparently: use 24500 upgraded model format: chunked .anim files, change in the exporter reordering sequence+bone blocks before name
 };
 
+template<typename ostrm>
+ostrm& operator<<(ostrm& os,const md20_flags &f)
+{
+	if(f.flag_unk_0x200000)
+		os<<"(Legion 24500 upgraded model format)";
+	return os;
+}
+
 namespace common
 {
 struct compbone

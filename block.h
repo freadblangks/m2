@@ -1,6 +1,7 @@
 #pragma once
 
 #include<string>
+#include<ostream>
 
 namespace m2
 {
@@ -13,6 +14,7 @@ class block
 		virtual base* clone() const = 0;
 		virtual std::string serialize() const = 0;
 		virtual const std::type_info& type() const = 0;
+		virtual std::ostream& output(std::ostream& os) const = 0;
 	}*u;
 	template<typename T>
 	struct derv:base
@@ -31,6 +33,10 @@ class block
 		const std::type_info& type() const
 		{
 			return typeid(t);
+		}
+		std::ostream& output(std::ostream& os) const
+		{
+			return os<<t;
 		}
 	};
 public:
@@ -88,6 +94,10 @@ public:
 		if(type()==typeid(T))
 			return static_cast<const derv<T>*>(u)->t;
 		throw std::bad_cast();
+	}
+	friend std::ostream& operator<<(std::ostream& os,const block &c)
+	{
+		return c.u->output(os);
 	}
 };
 

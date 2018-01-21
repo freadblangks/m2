@@ -8,11 +8,10 @@
 namespace m2
 {
 
-class unknown
+struct unknown
 {
 	magic m;
 	std::string unks;
-public:
 	template<typename ...Args>
 	unknown(std::uint32_t mgc,Args&& ...args):m{mgc},unks(std::forward<Args>(args)...){}
 	std::string serialize() const
@@ -24,5 +23,12 @@ public:
 		return s;
 	}
 };
+
+template<typename ostrm>
+ostrm& operator<<(ostrm& os,const unknown& u)
+{
+	os.rdbuf()->sputn(u.m.a.data(),u.m.a.size());
+	return os<<"\tsize:"<<u.unks.size();
+}
 
 }
