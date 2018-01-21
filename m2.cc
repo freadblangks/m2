@@ -20,6 +20,11 @@ try
 	m2::m2 m(file);
 	std::cout<<m<<'\n';
 	decltype(auto) md20(m.get<m2::md20>());
+	std::cout<<md20.bones.size()<<'\n';
+	for(const auto &ele : md20.bones)
+	{
+		std::cout<<ele<<'\n';
+	}
 }
 catch(const std::exception& ex)
 {

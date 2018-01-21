@@ -62,7 +62,6 @@ struct md20
 		for(std::size_t i(0);i!=header.bones.number;++i)
 		{
 			decltype(auto) ele(b[i]);
-			
 			bones.emplace_back();
 			auto &back(bones.back());
 			back.c=ele.c;
@@ -74,17 +73,17 @@ struct md20
 		}
 		m(key_bone_lookups,header.key_bone_lookups);
 	}
-	std::string serialize_md20() const
+	auto serialize_md20() const
 	{
 		std::string s("MD20");
 		
 		return s;
 	}
-	std::string serialize() const
+	auto serialize() const
 	{
 		std::string s("MD21");
 		auto p(serialize_md20());	
-		magic m{static_cast<std::uint32_t>(s.size())};		
+		magic m{static_cast<std::uint32_t>(p.size())};		
 		s.append(m.a.cbegin(),m.a.cend());
 		s.append(p);
 		return s;
@@ -94,7 +93,8 @@ struct md20
 template<typename ostrm>
 ostrm& operator<<(ostrm& os,const md20& u)
 {
-	return os<<"MD20\t"<<u.name<<'\t'<<u.ver;
+	os<<"MD20\t"<<u.name<<'\t'<<u.ver<<'\t'<<u.flags;
+	return os;
 }
 
 }

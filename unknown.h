@@ -14,7 +14,7 @@ struct unknown
 	std::string unks;
 	template<typename ...Args>
 	unknown(std::uint32_t mgc,Args&& ...args):m{mgc},unks(std::forward<Args>(args)...){}
-	std::string serialize() const
+	auto serialize() const
 	{
 		std::string s(m.a.cbegin(),m.a.cend());
 		magic v{static_cast<std::uint32_t>(unks.size())};

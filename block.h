@@ -70,7 +70,7 @@ public:
 		delete u;
 	}
 	
-	std::string serialize() const
+	auto serialize() const
 	{
 		return u->serialize();
 	}
