@@ -45,5 +45,6 @@ struct dheader
 	offset camera_lookup_table;
 	offset ribbon_emitters;
 	offset particle_emitters;
+	offset texture_combiner_combos;
 };
 }

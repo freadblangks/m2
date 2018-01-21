@@ -45,6 +45,8 @@ struct md20
 	std::vector<light> lights;
 	std::vector<camera> cameras;
 	std::vector<std::uint16_t> camera_lookup_table;
+	std::vector<ribbon> ribbons;
+	std::vector<std::uint16_t> texture_combiner_combos;
 	md20(const std::string &s)
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
@@ -213,7 +215,34 @@ struct md20
 			pt(back.fov,ele.fov);
 		}
 		}
+		{
+		auto b(reinterpret_cast<const dh::ribbon*>(s.data()+header.ribbon_emitters.offset_elements));
+		for(std::size_t i(0);i!=header.ribbon_emitters.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			ribbons.emplace_back();
+			auto &back(ribbons.back());
+			back.t=ele.t;
+			m(back.texture_indices,ele.texture_indices);
+			m(back.material_indices,ele.material_indices);
+			pt(back.color,ele.color);
+			pt(back.alpha,ele.alpha);
+			pt(back.height_above,ele.height_above);
+			pt(back.height_below,ele.height_below);
+			back.edge_per_second=ele.edge_per_second;
+			back.edge_life_time=ele.edge_life_time;
+			back.gravity=ele.gravity;
+			back.texture_rows=ele.texture_rows;
+			back.texture_cols=ele.texture_cols;
+			pt(back.texture_slot,ele.texture_slot);
+			pt(back.visibility,ele.visibility);
+			back.priority_plane=ele.priority_plane;
+			back.padding=ele.padding;
+		}
+		}
 		m(camera_lookup_table,header.camera_lookup_table);
+		if(flags.flag_use_texture_combiner_combos)
+			m(texture_combiner_combos,header.texture_combiner_combos);
 	}
 	auto serialize_md20() const
 	{

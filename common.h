@@ -250,6 +250,13 @@ struct camera
 	float near_clip;
 };
 
+struct ribbon
+{
+	std::uint32_t id;
+	std::uint32_t bone_index;
+	common_types::vector3 position;
+};
+
 }
 
 }

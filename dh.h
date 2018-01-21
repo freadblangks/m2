@@ -82,5 +82,24 @@ struct camera
 	track fov;
 };
 
+struct ribbon
+{
+	common::ribbon t;
+	offset texture_indices;
+	offset material_indices;
+	track color;
+	track alpha;
+	track height_above;
+	track height_below;
+	float edge_per_second;
+	float edge_life_time;
+	float gravity;
+	std::uint16_t texture_rows,texture_cols;
+	track texture_slot;
+	track visibility;
+	std::int16_t priority_plane;
+	std::uint16_t padding;
+};
+
 }
 }
