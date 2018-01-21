@@ -11,8 +11,8 @@ class block
 	{
 		virtual ~base() = default;
 		virtual base* clone() const = 0;
-		std::string serialize() const = 0;
-	};
+		virtual std::string serialize() const = 0;
+	}*u;
 	template<typename T>
 	struct derv:base
 	{
@@ -27,7 +27,7 @@ class block
 		{
 			return t.serialize();
 		}
-	}*u;
+	};
 public:
 	template<typename T,typename ...Args>
 	block(std::in_place_type_t<T>,Args&& ...args):u(new derv<T>(std::forward<Args>(args)...)){}

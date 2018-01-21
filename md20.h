@@ -3,12 +3,13 @@
 #include<string>
 #include"magic.h"
 #include"version.h"
-#include"common.h"
+#include"special.h"
 #include"dheader.h"
 #include<stdexcept>
 
 namespace m2
 {
+using namespace std::string_literals;
 struct md20
 {
 	version ver;
@@ -23,7 +24,7 @@ struct md20
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
 			throw std::runtime_error("not MD20 which is ("s+s.substr(0,4)+")"s);
-		decltype(auto) header(*reinterpret_cast<const dheader*>(p));
+		decltype(auto) header(*reinterpret_cast<const dheader*>(s.data()+4));
 		auto m([&s](auto &vec,const offset& off)
 		{
 			auto b(reinterpret_cast<typename std::remove_reference_t<decltype(vec)>::const_pointer>(s.data()+off.offset_elements));
@@ -32,9 +33,9 @@ struct md20
 		});
 		auto pt([&s,&m](auto &trk,const dh::track& t)
 		{
-			trk=t;
+			trk.t=t.t;
 			{
-			auto b(reinterpret_cast<offset>(s.data()+t.timestamps.offset_elements));
+			auto b(reinterpret_cast<const offset*>(s.data()+t.timestamps.offset_elements));
 			for(std::size_t i(0);i!=t.timestamps.number;++i)
 			{
 				trk.timestamps.emplace_back();
@@ -42,7 +43,7 @@ struct md20
 			}
 			}
 			{
-			auto b(reinterpret_cast<offset>(s.data()+t.timestamps.offset_elements));
+			auto b(reinterpret_cast<const offset*>(s.data()+t.timestamps.offset_elements));
 			for(std::size_t i(0);i!=t.timestamps.number;++i)
 			{
 				trk.values.emplace_back();
@@ -57,12 +58,14 @@ struct md20
 		m(sequences,header.sequences);
 		m(sequences_lookups,header.sequences_lookups);
 		{
-		auto b(reinterpret_cast<const dh::compbone*>(header.data()+header.bones.offset_elements));
+		auto b(reinterpret_cast<const dh::compbone*>(s.data()+header.bones.offset_elements));
 		for(std::size_t i(0);i!=header.bones.number;++i)
 		{
-			const auto &ele(b[i]);
-			bones.emplace_back(ele);
+			decltype(auto) ele(b[i]);
+			
+			bones.emplace_back();
 			auto &back(bones.back());
+			back.c=ele.c;
 			back.pivot=ele.pivot;
 			pt(back.translation,ele.translation);
 			pt(back.rotation,ele.rotation);
@@ -81,8 +84,8 @@ struct md20
 	{
 		std::string s("MD21");
 		auto p(serialize_md20());	
-		magic m(s.size());		
-		s.emplace_back(magic.a.cbegin(),magic.a.cend());
+		magic m{static_cast<std::uint32_t>(s.size())};		
+		s.append(m.a.cbegin(),m.a.cend());
 		s.append(p);
 		return s;
 	}

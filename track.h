@@ -4,8 +4,9 @@
 
 namespace m2
 {
-struct track_base:common::track
+struct track_base
 {
+	common::track t;
 	std::vector<std::vector<std::uint32_t>> timestamps;
 };
 

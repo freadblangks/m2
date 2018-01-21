@@ -12,17 +12,19 @@ struct offset
 
 namespace dh
 {
-struct track:common::track
+struct track
 {
+	common::track t;
 	offset timestamps;
 	offset values;
 };
-struct compbone:common::compbone
+struct compbone
 {
+	common::compbone c;
 	track translation;
 	track rotation;
 	track scale;
-	vector3 pivot;
+	common_types::vector3 pivot;
 };
 }
 

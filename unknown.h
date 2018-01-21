@@ -18,7 +18,7 @@ public:
 	std::string serialize() const
 	{
 		std::string s(m.a.cbegin(),m.a.cend());
-		magic v(unk.size());
+		magic v{static_cast<std::uint32_t>(unks.size())};
 		s.append(v.a.cbegin(),v.a.cend());
 		s.append(unks);
 		return s;
