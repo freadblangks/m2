@@ -14,7 +14,7 @@ class unknown
 	std::string unks;
 public:
 	template<typename ...Args>
-	unknown(std::uint32_t mgc,Args&& ...args):m(mgc),unks(std::forward<Args>(args)...){}
+	unknown(std::uint32_t mgc,Args&& ...args):m{mgc},unks(std::forward<Args>(args)...){}
 	std::string serialize() const
 	{
 		std::string s(m.a.cbegin(),m.a.cend());
