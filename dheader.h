@@ -1,33 +1,8 @@
 #pragma once
-#include"common.h"
+#include"dh.h"
 
 namespace m2
 {
-
-struct offset
-{
-	std::uint32_t number;
-	std::uint32_t offset_elements;
-};
-
-namespace dh
-{
-struct track
-{
-	common::track t;
-	offset timestamps;
-	offset values;
-};
-struct compbone
-{
-	common::compbone c;
-	track translation;
-	track rotation;
-	track scale;
-	common_types::vector3 pivot;
-};
-}
-
 struct dheader
 {
 	version ver;

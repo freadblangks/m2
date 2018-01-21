@@ -20,6 +20,11 @@ struct md20
 	std::vector<std::uint16_t> sequences_lookups;
 	std::vector<compbone> bones;
 	std::vector<std::uint16_t> key_bone_lookups;
+	std::vector<vertex> vertices;
+	std::uint32_t num_skin_profiles;
+	std::vector<color> colors;
+	std::vector<texture> textures;
+	std::vector<texture_weight> texture_weights;
 	md20(const std::string &s)
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
@@ -72,11 +77,41 @@ struct md20
 		}
 		}
 		m(key_bone_lookups,header.key_bone_lookups);
+		m(vertices,header.vertices);
+		num_skin_profiles=header.num_skin_profiles;
+		{
+		auto b(reinterpret_cast<const dh::color*>(s.data()+header.colors.offset_elements));
+		for(std::size_t i(0);i!=header.colors.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			colors.emplace_back();
+			auto &back(colors.back());
+			pt(back.c,ele.c);
+			pt(back.a,ele.a);
+		}
+		}
+		{
+		auto b(reinterpret_cast<const dh::texture*>(s.data()+header.textures.offset_elements));
+		for(std::size_t i(0);i!=header.textures.number;++i)
+		{
+			textures.emplace_back();
+			textures.back().t=b[i].t;
+			m(textures.back().filename,b[i].filename);
+		}
+		}
+		{
+		auto b(reinterpret_cast<const dh::texture_weight*>(s.data()+header.texture_weights.offset_elements));
+		for(std::size_t i(0);i!=header.texture_weights.number;++i)
+		{
+			texture_weights.emplace_back();
+			pt(texture_weights.back(),b[i]);
+		}
+		}
 	}
 	auto serialize_md20() const
 	{
 		std::string s("MD20");
-		
+
 		return s;
 	}
 	auto serialize() const

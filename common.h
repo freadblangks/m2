@@ -153,10 +153,20 @@ struct md20_flags
 template<typename ostrm>
 ostrm& operator<<(ostrm& os,const md20_flags &f)
 {
+	if(f.flag_demon_hunter_tatto_glowing)
+		os<<"[Demon Hunter Tatto Glowing]";
 	if(f.flag_unk_0x200000)
-		os<<"(Legion 24500 upgraded model format)";
+		os<<"[Legion 24500 upgraded model format]";
 	return os;
 }
+
+struct vertex
+{
+	common_types::vector3 pos;
+	std::array<std::uint8_t,4> weight,indice;
+	common_types::vector3 normal;
+	std::array<common_types::vector2,2> tex_coords;
+};
 
 namespace common
 {
@@ -178,6 +188,17 @@ struct track
 	std::uint16_t interpolating;
 	std::uint16_t global_sequence;
 };
+
+struct texture
+{
+	std::uint32_t type,flags;
+};
+
+template<typename ostrm>
+ostrm& operator<<(ostrm& os,const texture& c)
+{
+	return os<<c.type<<'\t'<<c.flags;
+}
 }
 
 }
