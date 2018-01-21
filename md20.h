@@ -41,6 +41,8 @@ struct md20
 	std::vector<common_types::vector3> collision_vertices,collision_normals;
 	std::vector<attachment> attachments;
 	std::vector<std::uint16_t> attachment_lookup_table;
+	std::vector<event> events;
+	std::vector<light> lights;
 	md20(const std::string &s)
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
@@ -52,7 +54,7 @@ struct md20
 			auto e(b+off.number);
 			vec.assign(b,e);
 		});
-		auto pt([&s,&m](auto &trk,const dh::track& t)
+		auto pt_base([&s,&m](auto &trk,const dh::track_base& t)
 		{
 			trk.t=t.t;
 			{
@@ -63,6 +65,10 @@ struct md20
 				m(trk.timestamps.back(),b[i]);
 			}
 			}
+		});
+		auto pt([&s,&m,&pt_base](auto &trk,const dh::track& t)
+		{
+			pt_base(trk,t);
 			{
 			auto b(reinterpret_cast<const offset*>(s.data()+t.timestamps.offset_elements));
 			for(std::size_t i(0);i!=t.timestamps.number;++i)
@@ -161,6 +167,34 @@ struct md20
 		}
 		}
 		m(attachment_lookup_table,header.attachment_lookup_table);
+		{
+		auto b(reinterpret_cast<const dh::event*>(s.data()+header.events.offset_elements));
+		for(std::size_t i(0);i!=header.events.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			events.emplace_back();
+			auto &back(events.back());
+			back.t=ele.t;
+			pt_base(back.enabled,ele.enabled);
+		}
+		}
+		{
+		auto b(reinterpret_cast<const dh::light*>(s.data()+header.lights.offset_elements));
+		for(std::size_t i(0);i!=header.lights.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			lights.emplace_back();
+			auto &back(lights.back());
+			back.t=ele.t;
+			pt(back.ambient_color,ele.ambient_color);
+			pt(back.ambient_intensity,ele.ambient_intensity);
+			pt(back.diffuse_color,ele.diffuse_color);
+			pt(back.diffuse_intensity,ele.diffuse_intensity);
+			pt(back.attenuation_start,ele.attenuation_start);
+			pt(back.attenuation_end,ele.attenuation_end);
+			pt(back.visibility,ele.visibility);
+		}
+		}
 	}
 	auto serialize_md20() const
 	{

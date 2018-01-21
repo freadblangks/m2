@@ -219,6 +219,21 @@ decltype(auto) operator<<(ostrm& os,const attachment &c)
 	return os<<"id "<<c.id<<"\tbone "<<c.bone<<"\tpivot "<<c.position;
 }
 
+struct event
+{
+	std::uint32_t identifier;
+	std::uint32_t data;
+	std::uint32_t bone;
+	common_types::vector3 position;
+};
+
+struct light
+{
+	std::uint16_t type;
+	std::uint16_t bone;
+	common_types::vector3 position;
+};
+
 }
 
 }

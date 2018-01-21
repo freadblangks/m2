@@ -11,12 +11,16 @@ struct offset
 
 namespace dh
 {
-struct track
+struct track_base
 {
 	common::track t;
 	offset timestamps;
+};
+struct track:track_base
+{
 	offset values;
 };
+
 struct compbone
 {
 	common::compbone c;
@@ -48,5 +52,24 @@ struct attachment
 	common::attachment t;
 	track animate_attached;
 };
+
+struct event
+{
+	common::event t;
+	track_base enabled;
+};
+
+struct light
+{
+	common::light t;
+	track ambient_color;
+	track ambient_intensity;
+	track diffuse_color;
+	track diffuse_intensity;
+	track attenuation_start;
+	track attenuation_end;
+	track visibility;
+};
+
 }
 }

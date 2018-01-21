@@ -56,4 +56,22 @@ ostrm& operator<<(ostrm& os,const attachment& c)
 	return os<<c.t;
 }
 
+struct event
+{
+	common::event t;
+	track_base enabled;
+};
+
+struct light
+{
+	common::light t;
+	track<common_types::vector3> ambient_color;
+	track<float> ambient_intensity;
+	track<common_types::vector3> diffuse_color;
+	track<float> diffuse_intensity;
+	track<float> attenuation_start;
+	track<float> attenuation_end;
+	track<std::uint8_t> visibility;
+};
+
 }
