@@ -168,6 +168,11 @@ struct vertex
 	std::array<common_types::vector2,2> tex_coords;
 };
 
+struct material
+{
+	std::uint16_t flags,blending_mode;
+};
+
 namespace common
 {
 struct compbone

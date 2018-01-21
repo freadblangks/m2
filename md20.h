@@ -25,6 +25,20 @@ struct md20
 	std::vector<color> colors;
 	std::vector<texture> textures;
 	std::vector<texture_weight> texture_weights;
+	std::vector<texture_transform> texture_transforms;
+	std::vector<std::uint16_t> replacable_texture_lookup;
+	std::vector<material> materials;
+	std::vector<std::uint16_t> bone_lookup_table;
+	std::vector<std::uint16_t> texture_lookup_table;
+	std::vector<std::uint16_t> tex_unit_lookup_table;
+	std::vector<std::uint16_t> transparency_lookup_table;
+	std::vector<std::uint16_t> texture_transforms_lookup_table;
+	common_types::aa_box bounding_box;
+	float bounding_sphere_radius;
+	common_types::aa_box collision_box;
+	float collision_sphere_radius;
+	std::vector<std::uint16_t> collision_triangles;
+	std::vector<common_types::vector3> collision_vertices,collision_normals;
 	md20(const std::string &s)
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
@@ -107,6 +121,32 @@ struct md20
 			pt(texture_weights.back(),b[i]);
 		}
 		}
+		{
+		auto b(reinterpret_cast<const dh::texture_transform*>(s.data()+header.texture_transforms.offset_elements));
+		for(std::size_t i(0);i!=header.texture_transforms.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			texture_transforms.emplace_back();
+			auto &back(texture_transforms.back());
+			pt(back.translation,ele.translation);
+			pt(back.rotation,ele.rotation);
+			pt(back.scaling,ele.scaling);
+		}
+		}
+		m(replacable_texture_lookup,header.replacable_texture_lookup);
+		m(materials,header.materials);
+		m(bone_lookup_table,header.bone_lookup_table);
+		m(texture_lookup_table,header.texture_lookup_table);
+		m(tex_unit_lookup_table,header.tex_unit_lookup_table);
+		m(transparency_lookup_table,header.transparency_lookup_table);
+		m(texture_transforms_lookup_table,header.texture_transforms_lookup_table);
+		bounding_box=header.bounding_box;
+		bounding_sphere_radius=header.bounding_sphere_radius;
+		collision_box=header.collision_box;
+		collision_sphere_radius=header.collision_sphere_radius;
+		m(collision_triangles,header.collision_triangles);
+		m(collision_vertices,header.collision_vertices);
+		m(collision_normals,header.collision_normals);
 	}
 	auto serialize_md20() const
 	{

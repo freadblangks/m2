@@ -35,5 +35,13 @@ struct texture
 	offset filename;
 };
 using texture_weight = track;
+
+struct texture_transform
+{
+	track translation;
+	track rotation;
+	track scaling;
+};
+
 }
 }

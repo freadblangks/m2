@@ -38,4 +38,11 @@ ostrm& operator<<(ostrm& os,const texture& c)
 
 using texture_weight = track<std::uint16_t>;
 
+struct texture_transform
+{
+	track<common_types::vector3> translation;
+	track<common_types::vector4> rotation;
+	track<common_types::vector3> scaling;
+};
+
 }
