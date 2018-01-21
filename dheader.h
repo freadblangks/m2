@@ -6,45 +6,46 @@ namespace m2
 struct dheader
 {
 	version ver;
-	offset name;
+	offset<char> name;
 	md20_flags flags;
 
-	offset loops;
-	offset sequences;
-	offset sequences_lookups;
-	offset bones;
-	offset key_bone_lookups;
-	offset vertices;
+	offset<loop> loops;
+	offset<sequence> sequences;
+	offset<std::uint16_t> sequences_lookups;
+	offset<compbone> bones;
+	offset<std::int16_t> key_bone_lookups;
+	offset<vertex> vertices;
 	std::uint32_t num_skin_profiles;
-	offset colors;
-	offset textures;
-	offset texture_weights;
-	offset texture_transforms;
-	offset replacable_texture_lookup;
-	offset materials;
+	offset<color> colors;
+	offset<texture> textures;
+	offset<texture_weight> texture_weights;
+	offset<texture_transform> texture_transforms;
+	offset<std::uint16_t> replacable_texture_lookup;
+	offset<material> materials;
 
-	offset bone_lookup_table;
-	offset texture_lookup_table;
-	offset tex_unit_lookup_table;
-	offset transparency_lookup_table;
-	offset texture_transforms_lookup_table;
+	offset<std::uint16_t> bone_lookup_table;
+	offset<std::uint16_t> texture_lookup_table;
+	offset<std::uint16_t> tex_unit_lookup_table;
+	offset<std::uint16_t> transparency_lookup_table;
+	offset<std::uint16_t> texture_transforms_lookup_table;
 
 	common_types::aa_box bounding_box;
 	float bounding_sphere_radius;
 	common_types::aa_box collision_box;
 	float collision_sphere_radius;
-	offset collision_triangles;
-	offset collision_vertices;
-	offset collision_normals;
-	offset attachments;
+	offset<std::uint16_t> collision_triangles;
+	offset<common_types::vector3> collision_vertices;
+	offset<common_types::vector3> collision_normals;
+	offset<attachment> attachments;
 
-	offset attachment_lookup_table;
-	offset events;
-	offset lights;
-	offset cameras;
-	offset camera_lookup_table;
-	offset ribbon_emitters;
-	offset particle_emitters;
-	offset texture_combiner_combos;
+	offset<std::uint16_t> attachment_lookup_table;
+	offset<event> events;
+	offset<light> lights;
+	offset<camera> cameras;
+	offset<std::uint16_t> camera_lookup_table;
+	offset<ribbon> ribbon_emitters;
+	offset<void> particle_emitters;
+	
+	offset<std::uint16_t> texture_combiner_combos;
 };
 }
