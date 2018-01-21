@@ -150,26 +150,4 @@ struct md20_flags
 	std::uint32_t flag_unk_0x200000: 1;// apparently: use 24500 upgraded model format: chunked .anim files, change in the exporter reordering sequence+bone blocks before name
 };
 
-namespace common
-{
-struct compbone
-{
-	keybone key_bone_id;
-	std::uint32_t flags;
-	std::int16_t parent_bone;
-	std::uint16_t submesh_id;
-	struct
-	{
-		std::uint16_t u_dist_to_furth_desc;
-		std::uint16_t u_z_ratio_of_chain;
-	}compress_data;
-};
-
-struct track
-{
-	std::uint16_t interpolating;
-	std::uint16_t global_sequence;
-};
-}
-
 }
