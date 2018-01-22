@@ -257,6 +257,44 @@ struct ribbon
 	common_types::vector3 position;
 };
 
+struct particle
+{
+	std::uint32_t id;                        // Always (as I have seen): -1.
+	std::uint32_t flags;                             // See Below
+	common_types::vector3 position;                       // The position. Relative to the following bone.
+	std::uint16_t bone;                              // The bone its attached to.
+	std::uint16_t texture;                         // And the textures that are used. 
+};
+
+struct particle_middle
+{
+	float mid_point; // Middle point in lifespan (0 to 1).
+	std::array<std::array<std::uint8_t,4>,3> color_values; // 3*BGRA
+	std::array<float,3> scale_values;
+	std::array<std::uint16_t,2> head_cell_begin;
+	std::uint16_t unk1; // Always 1
+	std::array<std::uint16_t,2> head_cell_end;
+	std::uint16_t unk2; // Always 1
+	std::array<std::uint16_t,4> tiles; // Indices into the tiles on the texture ? Or tailCell maybe ?
+	float tail_length;                         // TailCellTime?
+	float twinkle_speed;                       // has something to do with the spread
+	float twinkle_percent;                     // has something to do with the spread
+	range twinkle_scale;
+	float burst_multiplier;                    // ivelScale
+	float drag;                               // For a non-zero values, instead of travelling linearly the particles seem to slow down sooner. Speed is multiplied by exp( -drag * t ).
+	float base_spin;                           // Initial rotation of the particle quad
+	float base_spin_vary;
+	float spin;                               // Rotation of the particle quad per second
+	float spin_vary;
+	common_types::aa_box tumble;
+	common_types::vector3 wind_vector;
+	float wind_time;
+	float follow_speed1;
+	float follow_scale1;
+	float follow_speed2;
+	float follow_scale2;
+};
+
 }
 
 }
