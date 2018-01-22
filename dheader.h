@@ -46,7 +46,7 @@ struct dheader
 	offset<dh::camera> cameras;
 	offset<std::uint16_t> camera_lookup_table;
 	offset<dh::ribbon> ribbon_emitters;
-	offset<void> particle_emitters;
+	offset<dh::particle> particle_emitters;
 	
 	offset<std::uint16_t> texture_combiner_combos;
 };

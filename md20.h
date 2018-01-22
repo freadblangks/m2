@@ -238,6 +238,7 @@ struct md20
 			pt(back.fov,ele.fov);
 		}
 		}
+		m(camera_lookup_table,header.camera_lookup_table);
 		{
 		auto b(reinterpret_cast<const dh::ribbon*>(s.data()+header.ribbon_emitters.offset_elements));
 		for(std::size_t i(0);i!=header.ribbon_emitters.number;++i)
@@ -263,7 +264,6 @@ struct md20
 			back.padding=ele.padding;
 		}
 		}
-		m(camera_lookup_table,header.camera_lookup_table);
 		{
 		auto b(reinterpret_cast<const dh::particle*>(s.data()+header.particle_emitters.offset_elements));
 		for(std::size_t i(0);i!=header.particle_emitters.number;++i)
@@ -480,6 +480,7 @@ struct md20
 			b[i].fov=pt(back.fov,b[i].fov);
 		}
 		}
+		m(camera_lookup_table,header.camera_lookup_table);
 		{
 		auto b(ua(ribbons,header.ribbon_emitters));
 		for(std::size_t i(0);i!=ribbons.size();++i)
@@ -503,7 +504,39 @@ struct md20
 			b[i].padding=back.padding;
 		}
 		}
-		m(camera_lookup_table,header.camera_lookup_table);
+		{
+		auto b(ua(particles,header.particle_emitters));
+		for(std::size_t i(0);i!=particles.size();++i)
+		{
+			auto &back(particles[i]);
+			b[i].t=back.t;
+			m(back.geometry_model_filename,b[i].geometry_model_filename);
+			m(back.recursion_model_filename,b[i].recursion_model_filename);
+			b[i].m=back.m;
+			b[i].emission_speed=pt(back.emission_speed,b[i].emission_speed);
+			b[i].speed_variation=pt(back.speed_variation,b[i].speed_variation);
+			b[i].vertical_range=pt(back.vertical_range,b[i].vertical_range);
+			b[i].horizontal_range=pt(back.horizontal_range,b[i].horizontal_range);
+			b[i].gravity=pt(back.gravity,b[i].gravity);
+			b[i].lifespan=pt(back.lifespan,b[i].lifespan);
+			b[i].lifespan_vary=back.lifespan_vary;
+			b[i].emission_rate=pt(back.emission_rate,b[i].emission_rate);
+			b[i].emission_rate_vary=back.emission_rate_vary;
+			b[i].emission_area_length=pt(back.emission_area_length,b[i].emission_area_length);
+			b[i].emission_area_width=pt(back.emission_area_width,b[i].emission_area_width);
+			b[i].z_source=pt(back.z_source,b[i].z_source);
+			b[i].color_track=fake_pt(back.color_track,b[i].color_track);
+			b[i].alpha_track=fake_pt(back.alpha_track,b[i].alpha_track);
+			b[i].scale_track=fake_pt(back.scale_track,b[i].scale_track);
+			b[i].scale_vary=back.scale_vary;
+			b[i].head_cell_track=fake_pt(back.head_cell_track,b[i].head_cell_track);
+			b[i].tail_cell_track=fake_pt(back.tail_cell_track,b[i].tail_cell_track);
+			b[i].pm=back.pm;
+			b[i].spline_points=pt(back.spline_points,b[i].spline_points);
+			b[i].enabled_in=pt(back.enabled_in,b[i].enabled_in);
+			b[i].multi_texture_params=back.multi_texture_params;
+		}
+		}
 		if(flags.flag_use_texture_combiner_combos)
 			m(texture_combiner_combos,header.texture_combiner_combos);
 		*reinterpret_cast<dh::dheader*>(s.data()+4)=header;
