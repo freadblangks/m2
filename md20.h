@@ -308,29 +308,22 @@ struct md20
 			const auto &back(bones[i]);
 			b[i].c=back.c;
 			b[i].pivot=back.pivot;
-			{
-			auto t(pt(back.translation,b[i].translation));
-			b[i].translation = t;
-			}
-			{
-				
-			}
-//			pt(back.rotation,b[i].rotation);
-//			pt(back.scale,b[i].scale);
+			b[i].translation=pt(back.translation,b[i].translation);
+			b[i].rotation=pt(back.rotation,b[i].rotation);
+			b[i].scale=pt(back.scale,b[i].scale);
 		}
 		}
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		header.num_skin_profiles=num_skin_profiles;
-/*		{
+		{
 		auto b(ua(colors,header.colors));
 
 		for(std::size_t i(0);i!=colors.size();++i)
 		{
-			auto &ele(b[i]);
 			const auto &back(colors[i]);
-			pt(back.c,ele.c);
-			pt(back.a,ele.a);
+			b[i].c=pt(back.c,b[i].c);
+			b[i].a=pt(back.a,b[i].a);
 		}
 		}
 		{
@@ -344,19 +337,18 @@ struct md20
 		{
 		auto b(ua(texture_weights,header.texture_weights));
 		for(std::size_t i(0);i!=texture_weights.size();++i)
-			pt(texture_weights[i],b[i]);
+			b[i]=pt(texture_weights[i],b[i]);
 		}
 		{
 		auto b(ua(texture_transforms,header.texture_transforms));
 		for(std::size_t i(0);i!=texture_transforms.size();++i)
 		{
-			decltype(auto) ele(b[i]);
 			auto &back(texture_transforms[i]);
-			pt(back.translation,ele.translation);
-			pt(back.rotation,ele.rotation);
-			pt(back.scaling,ele.scaling);
+			b[i].translation=pt(back.translation,b[i].translation);
+			b[i].rotation=pt(back.rotation,b[i].rotation);
+			b[i].scaling=pt(back.scaling,b[i].scaling);
 		}
-		}*/
+		}
 		m(replacable_texture_lookup,header.replacable_texture_lookup);
 		m(materials,header.materials);
 		m(bone_lookup_table,header.bone_lookup_table);
@@ -377,75 +369,71 @@ struct md20
 		{
 			auto &back(attachments[i]);
 			b[i].t=back.t;
-			pt(back.animate_attached,b[i].animate_attached);
+			b[i].animate_attached=pt(back.animate_attached,b[i].animate_attached);
 		}
 		}
 		m(attachment_lookup_table,header.attachment_lookup_table);
-/*		{
+		{
 		auto b(ua(events,header.events));
 		for(std::size_t i(0);i!=events.size();++i)
 		{
-			decltype(auto) ele(b[i]);
 			auto &back(events[i]);
-			ele.t=back.t;
-			pt_base(back.enabled,ele.enabled);
+			b[i].t=back.t;
+			b[i].enabled=pt_base(back.enabled,b[i].enabled);
 		}
 		}
 		{
 		auto b(ua(lights,header.lights));
 		for(std::size_t i(0);i!=lights.size();++i)
 		{
-			decltype(auto) ele(b[i]);
 			auto &back(lights[i]);
-			ele.t=back.t;
-			pt(back.ambient_color,ele.ambient_color);
-			pt(back.ambient_intensity,ele.ambient_intensity);
-			pt(back.diffuse_color,ele.diffuse_color);
-			pt(back.diffuse_intensity,ele.diffuse_intensity);
-			pt(back.attenuation_start,ele.attenuation_start);
-			pt(back.attenuation_end,ele.attenuation_end);
-			pt(back.visibility,ele.visibility);
+			b[i].t=back.t;
+			b[i].ambient_color=pt(back.ambient_color,b[i].ambient_color);
+			b[i].ambient_intensity=pt(back.ambient_intensity,b[i].ambient_intensity);
+			b[i].diffuse_color=pt(back.diffuse_color,b[i].diffuse_color);
+			b[i].diffuse_intensity=pt(back.diffuse_intensity,b[i].diffuse_intensity);
+			b[i].attenuation_start=pt(back.attenuation_start,b[i].attenuation_start);
+			b[i].attenuation_end=pt(back.attenuation_end,b[i].attenuation_end);
+			b[i].visibility=pt(back.visibility,b[i].visibility);
 		}
 		}
 		{
 		auto b(ua(cameras,header.cameras));
 		for(std::size_t i(0);i!=cameras.size();++i)
 		{
-			decltype(auto) ele(b[i]);
 			auto &back(cameras[i]);
-			ele.t=back.t;
-			pt(back.positions,ele.positions);
-			ele.position_base=back.position_base;
-			pt(back.target_position,ele.target_position);
-			ele.target_position_base=back.target_position_base;
-			pt(back.roll,ele.roll);
-			pt(back.fov,ele.fov);
+			b[i].t=back.t;
+			pt(back.positions,b[i].positions);
+			b[i].position_base=back.position_base;
+			b[i].target_position=pt(back.target_position,b[i].target_position);
+			b[i].target_position_base=b[i].target_position_base;
+			b[i].roll=pt(back.roll,b[i].roll);
+			b[i].fov=pt(back.fov,b[i].fov);
 		}
 		}
 		{
 		auto b(ua(ribbons,header.ribbon_emitters));
 		for(std::size_t i(0);i!=ribbons.size();++i)
 		{
-			decltype(auto) ele(b[i]);
 			auto &back(ribbons[i]);
-			ele.t=back.t;
-			m(back.texture_indices,ele.texture_indices);
-			m(back.material_indices,ele.material_indices);
-			pt(back.color,ele.color);
-			pt(back.alpha,ele.alpha);
-			pt(back.height_above,ele.height_above);
-			pt(back.height_below,ele.height_below);
-			ele.edge_per_second=back.edge_per_second;
-			ele.edge_life_time=back.edge_life_time;
-			ele.gravity=back.gravity;
-			ele.texture_rows=back.texture_rows;
-			ele.texture_cols=back.texture_cols;
-			pt(back.texture_slot,ele.texture_slot);
-			pt(back.visibility,ele.visibility);
-			ele.priority_plane=back.priority_plane;
-			ele.padding=back.padding;
+			b[i].t=back.t;
+			m(back.texture_indices,b[i].texture_indices);
+			m(back.material_indices,b[i].material_indices);
+			b[i].color=pt(back.color,b[i].color);
+			b[i].alpha=pt(back.alpha,b[i].alpha);
+			b[i].height_above=pt(back.height_above,b[i].height_above);
+			b[i].height_below=pt(back.height_below,b[i].height_below);
+			b[i].edge_per_second=back.edge_per_second;
+			b[i].edge_life_time=back.edge_life_time;
+			b[i].gravity=back.gravity;
+			b[i].texture_rows=back.texture_rows;
+			b[i].texture_cols=back.texture_cols;
+			b[i].texture_slot=pt(back.texture_slot,b[i].texture_slot);
+			b[i].visibility=pt(back.visibility,b[i].visibility);
+			b[i].priority_plane=back.priority_plane;
+			b[i].padding=back.padding;
 		}
-		}*/
+		}
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
 			m(texture_combiner_combos,header.texture_combiner_combos);
