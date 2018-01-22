@@ -6,9 +6,28 @@
 #include"special.h"
 #include"dheader.h"
 #include<stdexcept>
+#include<iterator>
 
 namespace m2
 {
+
+template<typename T>
+struct m2_iterator
+{
+	using value_type = T;
+	using pointer = value_type*;
+	using reference = T&;
+	using iterator_category = std::random_access_iterator_tag;
+	using difference_type = std::size_t;
+	std::string &str;
+	std::size_t pos;
+	m2_iterator(std::string &s,std::size_t p):str(s),pos(p){}
+	reference operator[](difference_type p) const
+	{
+		return reinterpret_cast<pointer>(str.data())[p];
+	}
+};
+
 using namespace std::string_literals;
 struct md20
 {
@@ -256,15 +275,17 @@ struct md20
 						typename std::remove_reference_t<decltype(off)>::value_type>);
 			off.offset_elements=s.size();
 			off.number=vec.size();
+			m2_iterator<typename std::remove_reference_t<decltype(off)>::value_type> i(s,s.size());
 			s.append(reinterpret_cast<const char*>(vec.data()),reinterpret_cast<const char*>(vec.data()+vec.size()));
+			return i;
 		});
 		auto ua([&s](const auto &vec,auto& off)
 		{
 			off.offset_elements=s.size();
 			off.number=vec.size();
-			auto p(s.size());
+			m2_iterator<typename std::remove_reference_t<decltype(off)>::value_type> i(s,s.size());
 			s.append(sizeof(typename std::remove_reference_t<decltype(off)>::value_type)*vec.size(),0);
-			return reinterpret_cast<typename std::remove_reference_t<decltype(off)>::pointer>(s.data()+p);
+			return i;
 		});
 		auto pt_base([&m,&ua](const auto &trk,auto& t)
 		{
@@ -292,19 +313,18 @@ struct md20
 		auto b(ua(bones,header.bones));
 		for(std::size_t i(0);i!=bones.size();++i)
 		{
-			auto &ele(b[i]);
 			const auto &back(bones[i]);
-			ele.c=back.c;
-			ele.pivot=back.pivot;
-			pt(back.translation,ele.translation);
-			pt(back.rotation,ele.rotation);
-			pt(back.scale,ele.scale);
+			b[i].c=back.c;
+			b[i].pivot=back.pivot;
+			pt(back.translation,b[i].translation);
+			pt(back.rotation,b[i].rotation);
+			pt(back.scale,b[i].scale);
 		}
 		}
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		header.num_skin_profiles=num_skin_profiles;
-		{
+/*		{
 		auto b(ua(colors,header.colors));
 
 		for(std::size_t i(0);i!=colors.size();++i)
@@ -338,7 +358,7 @@ struct md20
 			pt(back.rotation,ele.rotation);
 			pt(back.scaling,ele.scaling);
 		}
-		}
+		}*/
 		m(replacable_texture_lookup,header.replacable_texture_lookup);
 		m(materials,header.materials);
 		m(bone_lookup_table,header.bone_lookup_table);
@@ -357,14 +377,13 @@ struct md20
 		auto b(ua(attachments,header.attachments));
 		for(std::size_t i(0);i!=attachments.size();++i)
 		{
-			decltype(auto) ele(b[i]);
 			auto &back(attachments[i]);
-			ele.t=back.t;
-			pt(back.animate_attached,ele.animate_attached);
+			b[i].t=back.t;
+			pt(back.animate_attached,b[i].animate_attached);
 		}
 		}
 		m(attachment_lookup_table,header.attachment_lookup_table);
-		{
+/*		{
 		auto b(ua(events,header.events));
 		for(std::size_t i(0);i!=events.size();++i)
 		{
@@ -428,7 +447,7 @@ struct md20
 			ele.priority_plane=back.priority_plane;
 			ele.padding=back.padding;
 		}
-		}
+		}*/
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
 			m(texture_combiner_combos,header.texture_combiner_combos);
