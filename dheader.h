@@ -3,6 +3,8 @@
 
 namespace m2
 {
+namespace dh
+{
 struct dheader
 {
 	version ver;
@@ -12,14 +14,14 @@ struct dheader
 	offset<loop> loops;
 	offset<sequence> sequences;
 	offset<std::uint16_t> sequences_lookups;
-	offset<compbone> bones;
-	offset<std::int16_t> key_bone_lookups;
+	offset<dh::compbone> bones;
+	offset<std::uint16_t> key_bone_lookups;
 	offset<vertex> vertices;
 	std::uint32_t num_skin_profiles;
-	offset<color> colors;
-	offset<texture> textures;
-	offset<texture_weight> texture_weights;
-	offset<texture_transform> texture_transforms;
+	offset<dh::color> colors;
+	offset<dh::texture> textures;
+	offset<dh::texture_weight> texture_weights;
+	offset<dh::texture_transform> texture_transforms;
 	offset<std::uint16_t> replacable_texture_lookup;
 	offset<material> materials;
 
@@ -36,16 +38,17 @@ struct dheader
 	offset<std::uint16_t> collision_triangles;
 	offset<common_types::vector3> collision_vertices;
 	offset<common_types::vector3> collision_normals;
-	offset<attachment> attachments;
+	offset<dh::attachment> attachments;
 
 	offset<std::uint16_t> attachment_lookup_table;
-	offset<event> events;
-	offset<light> lights;
-	offset<camera> cameras;
+	offset<dh::event> events;
+	offset<dh::light> lights;
+	offset<dh::camera> cameras;
 	offset<std::uint16_t> camera_lookup_table;
-	offset<ribbon> ribbon_emitters;
+	offset<dh::ribbon> ribbon_emitters;
 	offset<void> particle_emitters;
 	
 	offset<std::uint16_t> texture_combiner_combos;
 };
+}
 }

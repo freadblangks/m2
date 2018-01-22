@@ -52,7 +52,7 @@ struct md20
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
 			throw std::runtime_error("not MD20 which is ("s+s.substr(0,4)+")"s);
-		decltype(auto) header(*reinterpret_cast<const dheader*>(s.data()+4));
+		decltype(auto) header(*reinterpret_cast<const dh::dheader*>(s.data()+4));
 		auto m([&s](auto &vec,const auto& off)
 		{
 			auto b(reinterpret_cast<typename std::remove_reference_t<decltype(vec)>::const_pointer>(s.data()+off.offset_elements));
@@ -248,26 +248,35 @@ struct md20
 	auto serialize_md20() const
 	{
 		std::string s("MD20"s);
-/*		dheader header;
+		dh::dheader header;
 		s.resize(s.size()+sizeof(header),0);
-		auto m([&s](const auto &vec,offset& off,std::in_place_type_t<>)
+		auto m([&s](const auto &vec,auto& off)
 		{
+			static_assert(std::is_same_v<typename std::remove_reference_t<std::remove_const_t<decltype(vec)>>::value_type,
+						typename std::remove_reference_t<decltype(off)>::value_type>);
 			off.offset_elements=s.size();
 			off.number=vec.size();
 			s.append(reinterpret_cast<const char*>(vec.data()),reinterpret_cast<const char*>(vec.data()+vec.size()));
-			return reinterpret_cast<typename std::remove_const_t<std::remove_reference_t<decltype(vec)>>::pointer>(p);
 		});
-		auto pt_base([&m](const auto &trk,dh::track_base& t)
+		auto ua([&s](const auto &vec,auto& off)
+		{
+			off.offset_elements=s.size();
+			off.number=vec.size();
+			auto p(s.size());
+			s.append(sizeof(typename std::remove_reference_t<decltype(off)>::value_type)*vec.size(),0);
+			return reinterpret_cast<typename std::remove_reference_t<decltype(off)>::pointer>(s.data()+p);
+		});
+		auto pt_base([&m,&ua](const auto &trk,auto& t)
 		{
 			t.t=trk.t;
-			auto p(m(trk.timestamps,t.timestamps));
+			auto p(ua(trk.timestamps,t.timestamps));
 			for(std::size_t i(0);i!=trk.timestamps.size();++i)
 				m(trk.timestamps[i],p[i]);
 		});
-		auto pt([&m,&pt_base](const auto &trk,dh::track& t)
+		auto pt([&m,&ua,&pt_base](const auto &trk,auto& t)
 		{
 			pt_base(trk,t);
-			auto p(m(trk.values,t.values));
+			auto p(ua(trk.values,t.values));
 			for(std::size_t i(0);i!=trk.values.size();++i)
 				m(trk.values[i],p[i]);
 		});
@@ -280,8 +289,7 @@ struct md20
 		
 		m(sequences_lookups,header.sequences_lookups);
 		{
-		auto b(reinterpret_cast<const dh::compbone*>(s.data()+header.bones.offset_elements));
-		auto b(m(bones,header.bones));
+		auto b(ua(bones,header.bones));
 		for(std::size_t i(0);i!=bones.size();++i)
 		{
 			auto &ele(b[i]);
@@ -296,8 +304,9 @@ struct md20
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		header.num_skin_profiles=num_skin_profiles;
-		{
-		auto b(reinterpret_cast<const dh::color*>(s.data()+header.colors.offset_elements));
+/*		{
+		auto b(reinterpret_cast<const dh::color*>(s.data()));
+
 		for(std::size_t i(0);i!=header.colors.number;++i)
 		{
 			decltype(auto) ele(b[i]);
@@ -308,8 +317,9 @@ struct md20
 		}
 		}
 		{
-		auto b(reinterpret_cast<const dh::texture*>(s.data()+header.textures.offset_elements));
-		for(std::size_t i(0);i!=header.textures.number;++i)
+		s.append(sizeof(dh::texture)*textures.size());
+		auto b(reinterpret_cast<dh::texture*>(s.data()+s.size()));
+		for(std::size_t i(0);i!=textures.size();++i)
 		{
 			textures.emplace_back();
 			textures.back().t=b[i].t;

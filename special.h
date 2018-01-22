@@ -9,7 +9,7 @@ struct compbone
 {
 	common::compbone c;
 	track<common_types::vector3> translation;
-	track<common_types::vector4> rotation;
+	track<std::array<std::uint16_t,4>> rotation;
 	track<common_types::vector3> scale;
 	common_types::vector3 pivot;
 };

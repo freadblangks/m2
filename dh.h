@@ -9,6 +9,7 @@ struct offset
 	std::uint32_t number;
 	std::uint32_t offset_elements;
 	using value_type = T;
+	using pointer = value_type*;
 };
 
 namespace dh
