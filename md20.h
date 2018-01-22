@@ -270,19 +270,28 @@ struct md20
 			s.append(sizeof(typename std::remove_reference_t<decltype(off)>::value_type)*vec.size(),0);
 			return i;
 		});
-		auto pt_base([&m,&ua](const auto &trk,auto& t)
+		auto pt_base([&m,&ua](const auto &trk,auto t)
 		{
 			t.t=trk.t;
 			auto p(ua(trk.timestamps,t.timestamps));
 			for(std::size_t i(0);i!=trk.timestamps.size();++i)
 				m(trk.timestamps[i],p[i]);
+			return t;
 		});
-		auto pt([&m,&ua,&pt_base](const auto &trk,auto& t)
+		auto pt([&m,&ua,&pt_base](const auto &trk,auto t)
 		{
-			pt_base(trk,t);
+			{
+			t.t=trk.t;
+			auto p(ua(trk.timestamps,t.timestamps));
+			for(std::size_t i(0);i!=trk.timestamps.size();++i)
+				m(trk.timestamps[i],p[i]);
+			}
+			{
 			auto p(ua(trk.values,t.values));
 			for(std::size_t i(0);i!=trk.values.size();++i)
 				m(trk.values[i],p[i]);
+			}
+			return t;
 		});
 		header.ver=ver;
 		m(name,header.name);
@@ -299,7 +308,13 @@ struct md20
 			const auto &back(bones[i]);
 			b[i].c=back.c;
 			b[i].pivot=back.pivot;
-			pt(back.translation,b[i].translation);
+			{
+			auto t(pt(back.translation,b[i].translation));
+			b[i].translation = t;
+			}
+			{
+				
+			}
 //			pt(back.rotation,b[i].rotation);
 //			pt(back.scale,b[i].scale);
 		}
