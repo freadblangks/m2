@@ -108,7 +108,7 @@ struct md20
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		num_skin_profiles=header.num_skin_profiles;
-/*		{
+		{
 		auto b(reinterpret_cast<const dh::color*>(s.data()+header.colors.offset_elements));
 		for(std::size_t i(0);i!=header.colors.number;++i)
 		{
@@ -174,6 +174,10 @@ struct md20
 		}
 		}
 		m(attachment_lookup_table,header.attachment_lookup_table);
+		
+		
+		
+		
 		{
 		auto b(reinterpret_cast<const dh::event*>(s.data()+header.events.offset_elements));
 		for(std::size_t i(0);i!=header.events.number;++i)
@@ -245,7 +249,7 @@ struct md20
 		}
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
-			m(texture_combiner_combos,header.texture_combiner_combos);*/
+			m(texture_combiner_combos,header.texture_combiner_combos);
 	}
 	auto serialize_md20() const
 	{
@@ -316,7 +320,7 @@ struct md20
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		header.num_skin_profiles=num_skin_profiles;
-/*		{
+		{
 		auto b(ua(colors,header.colors));
 
 		for(std::size_t i(0);i!=colors.size();++i)
@@ -372,6 +376,10 @@ struct md20
 			b[i].animate_attached=pt(back.animate_attached,b[i].animate_attached);
 		}
 		}
+		
+		
+		
+		
 		m(attachment_lookup_table,header.attachment_lookup_table);
 		{
 		auto b(ua(events,header.events));
@@ -403,7 +411,7 @@ struct md20
 		{
 			auto &back(cameras[i]);
 			b[i].t=back.t;
-			pt(back.positions,b[i].positions);
+			b[i].positions=pt(back.positions,b[i].positions);
 			b[i].position_base=back.position_base;
 			b[i].target_position=pt(back.target_position,b[i].target_position);
 			b[i].target_position_base=b[i].target_position_base;
@@ -436,7 +444,7 @@ struct md20
 		}
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
-			m(texture_combiner_combos,header.texture_combiner_combos);*/
+			m(texture_combiner_combos,header.texture_combiner_combos);
 		
 		*reinterpret_cast<dh::dheader*>(s.data()+4)=header;
 		return s;
