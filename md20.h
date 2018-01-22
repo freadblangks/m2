@@ -304,38 +304,32 @@ struct md20
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		header.num_skin_profiles=num_skin_profiles;
-/*		{
-		auto b(reinterpret_cast<const dh::color*>(s.data()));
-
-		for(std::size_t i(0);i!=header.colors.number;++i)
 		{
-			decltype(auto) ele(b[i]);
-			colors.emplace_back();
-			auto &back(colors.back());
+		auto b(ua(colors,header.colors));
+
+		for(std::size_t i(0);i!=colors.size();++i)
+		{
+			auto &ele(b[i]);
+			const auto &back(colors[i]);
 			pt(back.c,ele.c);
 			pt(back.a,ele.a);
 		}
 		}
 		{
-		s.append(sizeof(dh::texture)*textures.size());
-		auto b(reinterpret_cast<dh::texture*>(s.data()+s.size()));
+		auto b(ua(textures,header.textures));
 		for(std::size_t i(0);i!=textures.size();++i)
 		{
-			textures.emplace_back();
-			textures.back().t=b[i].t;
-			m(textures.back().filename,b[i].filename);
+			b[i].t=textures[i].t;
+			m(textures[i].filename,b[i].filename);
 		}
 		}
 		{
-		auto b(reinterpret_cast<const dh::texture_weight*>(s.data()+header.texture_weights.offset_elements));
-		for(std::size_t i(0);i!=header.texture_weights.number;++i)
-		{
-			texture_weights.emplace_back();
-			pt(texture_weights.back(),b[i]);
-		}
+		auto b(ua(texture_weights,header.texture_weights));
+		for(std::size_t i(0);i!=texture_weights.size();++i)
+			pt(texture_weights[i],b[i]);
 		}
 		{
-		auto b(reinterpret_cast<const dh::texture_transform*>(s.data()+header.texture_transforms.offset_elements));
+/*		auto b(reinterpret_cast<const dh::texture_transform*>(s.data()+header.texture_transforms.offset_elements));
 		for(std::size_t i(0);i!=header.texture_transforms.number;++i)
 		{
 			decltype(auto) ele(b[i]);
@@ -439,13 +433,13 @@ struct md20
 			pt(back.visibility,ele.visibility);
 			back.priority_plane=ele.priority_plane;
 			back.padding=ele.padding;
-		}
+		}*/
 		}
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
 			m(texture_combiner_combos,header.texture_combiner_combos);
 		
-		*reinterpret_cast<dheader*>(s.data()+4)=header;*/
+		*reinterpret_cast<dh::dheader*>(s.data()+4)=header;
 		return s;
 	}
 	auto serialize() const

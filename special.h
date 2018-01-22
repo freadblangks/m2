@@ -22,7 +22,8 @@ ostrm& operator<<(ostrm& os,const compbone& c)
 
 struct color
 {
-	track<common_types::vector3> c,a;
+	track<common_types::vector3> c;
+	track<std::uint16_t> a;
 };
 
 struct texture
