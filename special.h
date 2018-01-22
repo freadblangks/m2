@@ -108,8 +108,8 @@ struct ribbon
 struct particle
 {
 	common::particle t;
-	std::vector<char> geometry_model_filename;    // if given, this emitter spawns models
-	std::vector<char> recursion_model_filename;   // if given, this emitter is an alias for the (maximum 4) emitters of the given model
+	std::string geometry_model_filename;    // if given, this emitter spawns models
+	std::string recursion_model_filename;   // if given, this emitter is an alias for the (maximum 4) emitters of the given model
 
 	common::particle_middle m;
 	track<float> emission_speed;             // Base velocity at which particles are emitted.

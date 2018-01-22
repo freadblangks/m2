@@ -18,6 +18,11 @@ try
 		fin.exceptions(std::ifstream::failbit);
 	std::string file((std::istreambuf_iterator<char>(fin)),std::istreambuf_iterator<char>());
 	m2::m2 m(file);
+	auto &md20(m.get<m2::md20>());
+	for(const auto &ele : md20.particles)
+	{
+		std::cout<<ele.geometry_model_filename<<'\n';
+	}
 //	std::ofstream fout(argv[2],std::ofstream::binary);
 	auto serialize(m.serialize());
 	{
