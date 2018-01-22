@@ -300,8 +300,8 @@ struct md20
 			b[i].c=back.c;
 			b[i].pivot=back.pivot;
 			pt(back.translation,b[i].translation);
-			pt(back.rotation,b[i].rotation);
-			pt(back.scale,b[i].scale);
+//			pt(back.rotation,b[i].rotation);
+//			pt(back.scale,b[i].scale);
 		}
 		}
 		m(key_bone_lookups,header.key_bone_lookups);
