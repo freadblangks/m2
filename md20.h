@@ -329,12 +329,11 @@ struct md20
 			pt(texture_weights[i],b[i]);
 		}
 		{
-/*		auto b(reinterpret_cast<const dh::texture_transform*>(s.data()+header.texture_transforms.offset_elements));
-		for(std::size_t i(0);i!=header.texture_transforms.number;++i)
+		auto b(ua(texture_transforms,header.texture_transforms));
+		for(std::size_t i(0);i!=texture_transforms.size();++i)
 		{
 			decltype(auto) ele(b[i]);
-			texture_transforms.emplace_back();
-			auto &back(texture_transforms.back());
+			auto &back(texture_transforms[i]);
 			pt(back.translation,ele.translation);
 			pt(back.rotation,ele.rotation);
 			pt(back.scaling,ele.scaling);
@@ -347,15 +346,15 @@ struct md20
 		m(tex_unit_lookup_table,header.tex_unit_lookup_table);
 		m(transparency_lookup_table,header.transparency_lookup_table);
 		m(texture_transforms_lookup_table,header.texture_transforms_lookup_table);
-		bounding_box=header.bounding_box;
-		bounding_sphere_radius=header.bounding_sphere_radius;
-		collision_box=header.collision_box;
-		collision_sphere_radius=header.collision_sphere_radius;
+		header.bounding_box=bounding_box;
+		header.bounding_sphere_radius=bounding_sphere_radius;
+		header.collision_box=collision_box;
+		header.collision_sphere_radius=collision_sphere_radius;
 		m(collision_triangles,header.collision_triangles);
 		m(collision_vertices,header.collision_vertices);
 		m(collision_normals,header.collision_normals);
 		{
-		auto b(reinterpret_cast<const dh::attachment*>(s.data()+header.attachments.offset_elements));
+/*		auto b(reinterpret_cast<const dh::attachment*>(s.data()+header.attachments.offset_elements));
 		for(std::size_t i(0);i!=header.attachments.number;++i)
 		{
 			decltype(auto) ele(b[i]);
