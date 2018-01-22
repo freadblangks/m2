@@ -108,7 +108,7 @@ struct md20
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		num_skin_profiles=header.num_skin_profiles;
-		{
+/*		{
 		auto b(reinterpret_cast<const dh::color*>(s.data()+header.colors.offset_elements));
 		for(std::size_t i(0);i!=header.colors.number;++i)
 		{
@@ -245,12 +245,12 @@ struct md20
 		}
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
-			m(texture_combiner_combos,header.texture_combiner_combos);
+			m(texture_combiner_combos,header.texture_combiner_combos);*/
 	}
 	auto serialize_md20() const
 	{
-		std::string s("MD20"s);
-		dh::dheader header;
+		auto s("MD20"s);
+		dh::dheader header{};
 		s.resize(s.size()+sizeof(header),0);
 		auto m([&s](const auto &vec,auto& off)
 		{
@@ -316,7 +316,7 @@ struct md20
 		m(key_bone_lookups,header.key_bone_lookups);
 		m(vertices,header.vertices);
 		header.num_skin_profiles=num_skin_profiles;
-		{
+/*		{
 		auto b(ua(colors,header.colors));
 
 		for(std::size_t i(0);i!=colors.size();++i)
@@ -436,15 +436,15 @@ struct md20
 		}
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
-			m(texture_combiner_combos,header.texture_combiner_combos);
+			m(texture_combiner_combos,header.texture_combiner_combos);*/
 		
 		*reinterpret_cast<dh::dheader*>(s.data()+4)=header;
 		return s;
 	}
 	auto serialize() const
 	{
-		std::string s("MD21");
-		auto p(serialize_md20());	
+		auto s("MD21"s);
+		auto p(serialize_md20());
 		magic m{static_cast<std::uint32_t>(p.size())};		
 		s.append(m.a.cbegin(),m.a.cend());
 		s.append(p);

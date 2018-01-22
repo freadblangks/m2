@@ -20,6 +20,17 @@ try
 	m2::m2 m(file);
 //	std::ofstream fout(argv[2],std::ofstream::binary);
 	auto serialize(m.serialize());
+	{
+		m2::m2 m1(serialize);
+		auto s1(m1.serialize());
+//		std::cout<<file.size()<<' '<<serialize.size()<<' '<<s1.size()<<'\n';
+		std::cout<<(s1==serialize)<<'\n';
+	
+		for(std::size_t i(0);i!=serialize.size()&&i!=s1.size();++i)
+			if(serialize[i]!=s1[i])
+				std::cout<<i<<' '<<static_cast<std::uint32_t>(serialize[i])<<' '<<static_cast<std::uint32_t>(s1[i])<<'\n';
+	}
+	
 //	fout.rdbuf()->sputn(serialize.data(),serialize.size());
 
 }
