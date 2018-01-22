@@ -104,7 +104,7 @@ struct ribbon
 	float gravity;
 	std::uint16_t texture_rows,texture_cols;
 	track<std::uint16_t> texture_slot;
-	track<std::uint16_t> visibility;
+	track<std::uint8_t> visibility;
 	std::int16_t priority_plane;
 	std::uint16_t padding;
 };

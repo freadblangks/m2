@@ -354,36 +354,33 @@ struct md20
 		m(collision_vertices,header.collision_vertices);
 		m(collision_normals,header.collision_normals);
 		{
-/*		auto b(reinterpret_cast<const dh::attachment*>(s.data()+header.attachments.offset_elements));
-		for(std::size_t i(0);i!=header.attachments.number;++i)
+		auto b(ua(attachments,header.attachments));
+		for(std::size_t i(0);i!=attachments.size();++i)
 		{
 			decltype(auto) ele(b[i]);
-			attachments.emplace_back();
-			auto &back(attachments.back());
-			back.t=ele.t;
+			auto &back(attachments[i]);
+			ele.t=back.t;
 			pt(back.animate_attached,ele.animate_attached);
 		}
 		}
 		m(attachment_lookup_table,header.attachment_lookup_table);
 		{
-		auto b(reinterpret_cast<const dh::event*>(s.data()+header.events.offset_elements));
-		for(std::size_t i(0);i!=header.events.number;++i)
+		auto b(ua(events,header.events));
+		for(std::size_t i(0);i!=events.size();++i)
 		{
 			decltype(auto) ele(b[i]);
-			events.emplace_back();
-			auto &back(events.back());
-			back.t=ele.t;
+			auto &back(events[i]);
+			ele.t=back.t;
 			pt_base(back.enabled,ele.enabled);
 		}
 		}
 		{
-		auto b(reinterpret_cast<const dh::light*>(s.data()+header.lights.offset_elements));
-		for(std::size_t i(0);i!=header.lights.number;++i)
+		auto b(ua(lights,header.lights));
+		for(std::size_t i(0);i!=lights.size();++i)
 		{
 			decltype(auto) ele(b[i]);
-			lights.emplace_back();
-			auto &back(lights.back());
-			back.t=ele.t;
+			auto &back(lights[i]);
+			ele.t=back.t;
 			pt(back.ambient_color,ele.ambient_color);
 			pt(back.ambient_intensity,ele.ambient_intensity);
 			pt(back.diffuse_color,ele.diffuse_color);
@@ -394,45 +391,43 @@ struct md20
 		}
 		}
 		{
-		auto b(reinterpret_cast<const dh::camera*>(s.data()+header.cameras.offset_elements));
-		for(std::size_t i(0);i!=header.cameras.number;++i)
+		auto b(ua(cameras,header.cameras));
+		for(std::size_t i(0);i!=cameras.size();++i)
 		{
 			decltype(auto) ele(b[i]);
-			cameras.emplace_back();
-			auto &back(cameras.back());
-			back.t=ele.t;
+			auto &back(cameras[i]);
+			ele.t=back.t;
 			pt(back.positions,ele.positions);
-			back.position_base=ele.position_base;
+			ele.position_base=back.position_base;
 			pt(back.target_position,ele.target_position);
-			back.target_position_base=ele.target_position_base;
+			ele.target_position_base=back.target_position_base;
 			pt(back.roll,ele.roll);
 			pt(back.fov,ele.fov);
 		}
 		}
 		{
-		auto b(reinterpret_cast<const dh::ribbon*>(s.data()+header.ribbon_emitters.offset_elements));
-		for(std::size_t i(0);i!=header.ribbon_emitters.number;++i)
+		auto b(ua(ribbons,header.ribbon_emitters));
+		for(std::size_t i(0);i!=ribbons.size();++i)
 		{
 			decltype(auto) ele(b[i]);
-			ribbons.emplace_back();
-			auto &back(ribbons.back());
-			back.t=ele.t;
+			auto &back(ribbons[i]);
+			ele.t=back.t;
 			m(back.texture_indices,ele.texture_indices);
 			m(back.material_indices,ele.material_indices);
 			pt(back.color,ele.color);
 			pt(back.alpha,ele.alpha);
 			pt(back.height_above,ele.height_above);
 			pt(back.height_below,ele.height_below);
-			back.edge_per_second=ele.edge_per_second;
-			back.edge_life_time=ele.edge_life_time;
-			back.gravity=ele.gravity;
-			back.texture_rows=ele.texture_rows;
-			back.texture_cols=ele.texture_cols;
+			ele.edge_per_second=back.edge_per_second;
+			ele.edge_life_time=back.edge_life_time;
+			ele.gravity=back.gravity;
+			ele.texture_rows=back.texture_rows;
+			ele.texture_cols=back.texture_cols;
 			pt(back.texture_slot,ele.texture_slot);
 			pt(back.visibility,ele.visibility);
-			back.priority_plane=ele.priority_plane;
-			back.padding=ele.padding;
-		}*/
+			ele.priority_plane=back.priority_plane;
+			ele.padding=back.padding;
+		}
 		}
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
