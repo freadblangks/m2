@@ -49,7 +49,7 @@ struct md20
 	std::vector<std::uint16_t> camera_lookup_table;
 	std::vector<ribbon> ribbons;
 	std::vector<std::uint16_t> texture_combiner_combos;
-//	std::vector<particle> particles;
+	std::vector<particle> particles;
 	md20(const std::string &s)
 	{
 		if(s.front()!='M'||s[1]!='D'||s[2]!='2'||s[3]!='0')
@@ -85,6 +85,26 @@ struct md20
 			}
 			}
 		});
+		auto fake_pt([&s,&m](auto &trk,const auto& t)
+		{
+			{
+			auto b(reinterpret_cast<const offset<void>*>(s.data()+t.timestamps.offset_elements));
+			for(std::size_t i(0);i!=t.timestamps.number;++i)
+			{
+				trk.timestamps.emplace_back();
+				m(trk.timestamps.back(),b[i]);
+			}
+			}
+			{
+			auto b(reinterpret_cast<const offset<void>*>(s.data()+t.values.offset_elements));
+			for(std::size_t i(0);i!=t.values.number;++i)
+			{
+				trk.values.emplace_back();
+				m(trk.values.back(),b[i]);
+			}
+			}
+		});
+		
 		ver=header.ver;
 		m(name,header.name);
 		flags=header.flags;
@@ -174,10 +194,6 @@ struct md20
 		}
 		}
 		m(attachment_lookup_table,header.attachment_lookup_table);
-		
-		
-		
-		
 		{
 		auto b(reinterpret_cast<const dh::event*>(s.data()+header.events.offset_elements));
 		for(std::size_t i(0);i!=header.events.number;++i)
@@ -248,6 +264,41 @@ struct md20
 		}
 		}
 		m(camera_lookup_table,header.camera_lookup_table);
+		{
+		auto b(reinterpret_cast<const dh::particle*>(s.data()+header.particle_emitters.offset_elements));
+		for(std::size_t i(0);i!=header.particle_emitters.number;++i)
+		{
+			decltype(auto) ele(b[i]);
+			particles.emplace_back();
+			auto &back(particles.back());
+			back.t=ele.t;
+			m(back.geometry_model_filename,ele.geometry_model_filename);
+			m(back.recursion_model_filename,ele.recursion_model_filename);
+			back.m=ele.m;
+			pt(back.emission_speed,ele.emission_speed);
+			pt(back.speed_variation,ele.speed_variation);
+			pt(back.vertical_range,ele.vertical_range);
+			pt(back.horizontal_range,ele.horizontal_range);
+			pt(back.gravity,ele.gravity);
+			pt(back.lifespan,ele.lifespan);
+			back.lifespan_vary=ele.lifespan_vary;
+			pt(back.emission_rate,ele.emission_rate);
+			back.emission_rate_vary=ele.emission_rate_vary;
+			pt(back.emission_area_length,ele.emission_area_length);
+			pt(back.emission_area_width,ele.emission_area_width);
+			pt(back.z_source,ele.z_source);
+			fake_pt(back.color_track,ele.color_track);
+			fake_pt(back.alpha_track,ele.alpha_track);
+			fake_pt(back.scale_track,ele.scale_track);
+			back.scale_vary=ele.scale_vary;
+			fake_pt(back.head_cell_track,ele.head_cell_track);
+			fake_pt(back.tail_cell_track,ele.tail_cell_track);
+			back.pm=ele.pm;
+			pt(back.spline_points,ele.spline_points);
+			pt(back.enabled_in,ele.enabled_in);
+			back.multi_texture_params=ele.multi_texture_params;
+		}
+		}
 		if(flags.flag_use_texture_combiner_combos)
 			m(texture_combiner_combos,header.texture_combiner_combos);
 	}
@@ -282,10 +333,24 @@ struct md20
 				m(trk.timestamps[i],p[i]);
 			return t;
 		});
-		auto pt([&m,&ua,&pt_base](const auto &trk,auto t)
+		auto pt([&m,&ua](const auto &trk,auto t)
 		{
 			{
 			t.t=trk.t;
+			auto p(ua(trk.timestamps,t.timestamps));
+			for(std::size_t i(0);i!=trk.timestamps.size();++i)
+				m(trk.timestamps[i],p[i]);
+			}
+			{
+			auto p(ua(trk.values,t.values));
+			for(std::size_t i(0);i!=trk.values.size();++i)
+				m(trk.values[i],p[i]);
+			}
+			return t;
+		});
+		auto fake_pt([&m,&ua](auto &trk,auto t)
+		{
+			{
 			auto p(ua(trk.timestamps,t.timestamps));
 			for(std::size_t i(0);i!=trk.timestamps.size();++i)
 				m(trk.timestamps[i],p[i]);
@@ -376,10 +441,6 @@ struct md20
 			b[i].animate_attached=pt(back.animate_attached,b[i].animate_attached);
 		}
 		}
-		
-		
-		
-		
 		m(attachment_lookup_table,header.attachment_lookup_table);
 		{
 		auto b(ua(events,header.events));
@@ -445,7 +506,6 @@ struct md20
 		m(camera_lookup_table,header.camera_lookup_table);
 		if(flags.flag_use_texture_combiner_combos)
 			m(texture_combiner_combos,header.texture_combiner_combos);
-		
 		*reinterpret_cast<dh::dheader*>(s.data()+4)=header;
 		return s;
 	}
